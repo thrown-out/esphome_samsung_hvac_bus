@@ -102,6 +102,35 @@ namespace esphome
             virtual void set_outdoor_voltage(const std::string &address, float value) = 0;
             virtual void set_outdoor_operation_odu_mode_text_sensor(const std::string &address, int value) = 0;
             virtual void set_outdoor_operation_heatcool_text_sensor(const std::string &address, int value) = 0;
+            // CmdF0: inverter frequency sensors
+            virtual void set_inverter_current_frequency(const std::string &address, float value) = 0;
+            virtual void set_inverter_order_frequency(const std::string &address, float value) = 0;
+            virtual void set_inverter_target_frequency(const std::string &address, float value) = 0;
+            // CmdF1: electronic expansion valve sensors
+            virtual void set_outdoor_eev_a(const std::string &address, float value) = 0;
+            virtual void set_outdoor_eev_b(const std::string &address, float value) = 0;
+            virtual void set_outdoor_eev_c(const std::string &address, float value) = 0;
+            virtual void set_outdoor_eev_d(const std::string &address, float value) = 0;
+            // CmdC0: additional outdoor unit sensors
+            virtual void set_outdoor_discharge_temp(const std::string &address, float value) = 0;
+            virtual void set_outdoor_condenser_mid_temp(const std::string &address, float value) = 0;
+            virtual void set_outdoor_operation_mode(const std::string &address, float value) = 0;
+            virtual void set_outdoor_compressor(const std::string &address, float value) = 0;
+            virtual void set_outdoor_4way_valve(const std::string &address, float value) = 0;
+            virtual void set_outdoor_hot_gas_bypass(const std::string &address, float value) = 0;
+            virtual void set_outdoor_ac_fan(const std::string &address, float value) = 0;
+            // CmdC1: sump temperature
+            virtual void set_outdoor_sump_temp(const std::string &address, float value) = 0;
+            // CmdF0: protection flags and fan
+            virtual void set_outdoor_bldc_fan(const std::string &address, float value) = 0;
+            virtual void set_outdoor_freeze_protection(const std::string &address, float value) = 0;
+            virtual void set_outdoor_heating_overload(const std::string &address, float value) = 0;
+            virtual void set_outdoor_defrost_control(const std::string &address, float value) = 0;
+            virtual void set_outdoor_discharge_protection(const std::string &address, float value) = 0;
+            virtual void set_outdoor_current_control(const std::string &address, float value) = 0;
+            // CmdF3: inverter capacity data
+            virtual void set_inverter_max_frequency(const std::string &address, float value) = 0;
+            virtual void set_inverter_total_capacity_requirement(const std::string &address, float value) = 0;
         };
 
         struct ProtocolRequest

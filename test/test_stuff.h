@@ -253,6 +253,100 @@ public:
         last_set_error_code_value = error_code;
     }
 
+    void set_outdoor_operation_odu_mode_text_sensor(const std::string &address, int value) override {}
+    void set_outdoor_operation_heatcool_text_sensor(const std::string &address, int value) override {}
+
+    // CmdF0: inverter frequency sensors
+    float last_set_inverter_current_frequency_value{0};
+    void set_inverter_current_frequency(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_inverter_current_frequency=" << to_string(value) << endl;
+        last_set_inverter_current_frequency_value = value;
+    }
+
+    float last_set_inverter_order_frequency_value{0};
+    void set_inverter_order_frequency(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_inverter_order_frequency=" << to_string(value) << endl;
+        last_set_inverter_order_frequency_value = value;
+    }
+
+    float last_set_inverter_target_frequency_value{0};
+    void set_inverter_target_frequency(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_inverter_target_frequency=" << to_string(value) << endl;
+        last_set_inverter_target_frequency_value = value;
+    }
+
+    // CmdF1: electronic expansion valve sensors
+    float last_set_outdoor_eev_a_value{0};
+    void set_outdoor_eev_a(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_outdoor_eev_a=" << to_string(value) << endl;
+        last_set_outdoor_eev_a_value = value;
+    }
+
+    float last_set_outdoor_eev_b_value{0};
+    void set_outdoor_eev_b(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_outdoor_eev_b=" << to_string(value) << endl;
+        last_set_outdoor_eev_b_value = value;
+    }
+
+    float last_set_outdoor_eev_c_value{0};
+    void set_outdoor_eev_c(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_outdoor_eev_c=" << to_string(value) << endl;
+        last_set_outdoor_eev_c_value = value;
+    }
+
+    float last_set_outdoor_eev_d_value{0};
+    void set_outdoor_eev_d(const std::string &address, float value) override
+    {
+        cout << "> " << address << " set_outdoor_eev_d=" << to_string(value) << endl;
+        last_set_outdoor_eev_d_value = value;
+    }
+
+    // CmdC0: additional outdoor sensors
+    void set_outdoor_discharge_temp(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_discharge_temp=" << to_string(value) << endl; }
+    void set_outdoor_condenser_mid_temp(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_condenser_mid_temp=" << to_string(value) << endl; }
+    void set_outdoor_operation_mode(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_operation_mode=" << to_string(value) << endl; }
+    void set_outdoor_compressor(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_compressor=" << to_string(value) << endl; }
+    void set_outdoor_4way_valve(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_4way_valve=" << to_string(value) << endl; }
+    void set_outdoor_hot_gas_bypass(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_hot_gas_bypass=" << to_string(value) << endl; }
+    void set_outdoor_ac_fan(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_ac_fan=" << to_string(value) << endl; }
+
+    // CmdC1: sump temperature
+    void set_outdoor_sump_temp(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_sump_temp=" << to_string(value) << endl; }
+
+    // CmdF0: protection flags and BLDC fan
+    void set_outdoor_bldc_fan(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_bldc_fan=" << to_string(value) << endl; }
+    void set_outdoor_freeze_protection(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_freeze_protection=" << to_string(value) << endl; }
+    void set_outdoor_heating_overload(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_heating_overload=" << to_string(value) << endl; }
+    void set_outdoor_defrost_control(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_defrost_control=" << to_string(value) << endl; }
+    void set_outdoor_discharge_protection(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_discharge_protection=" << to_string(value) << endl; }
+    void set_outdoor_current_control(const std::string &address, float value) override
+        { cout << "> " << address << " set_outdoor_current_control=" << to_string(value) << endl; }
+
+    // CmdF3: inverter capacity data
+    void set_inverter_max_frequency(const std::string &address, float value) override
+        { cout << "> " << address << " set_inverter_max_frequency=" << to_string(value) << endl; }
+    void set_inverter_total_capacity_requirement(const std::string &address, float value) override
+        { cout << "> " << address << " set_inverter_total_capacity_requirement=" << to_string(value) << endl; }
+
         void assert_only_address(const std::string address)
         {
             assert(last_register_address == address);

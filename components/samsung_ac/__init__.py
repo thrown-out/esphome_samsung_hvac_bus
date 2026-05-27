@@ -106,6 +106,29 @@ CONF_PRESET_VALUE = "value"
 
 CONF_DEVICE_OUT_OPERATION_ODU_MODE_TEXT = "outdoor_operation_odu_mode"
 CONF_DEVICE_OUT_OPERATION_HEATCOOL_TEXT = "outdoor_operation_heatcool"
+CONF_DEVICE_INVERTER_CURRENT_FREQUENCY = "inverter_current_frequency"
+CONF_DEVICE_INVERTER_ORDER_FREQUENCY = "inverter_order_frequency"
+CONF_DEVICE_INVERTER_TARGET_FREQUENCY = "inverter_target_frequency"
+CONF_DEVICE_OUTDOOR_EEV_A = "outdoor_eev_a"
+CONF_DEVICE_OUTDOOR_EEV_B = "outdoor_eev_b"
+CONF_DEVICE_OUTDOOR_EEV_C = "outdoor_eev_c"
+CONF_DEVICE_OUTDOOR_EEV_D = "outdoor_eev_d"
+CONF_DEVICE_OUTDOOR_DISCHARGE_TEMP = "outdoor_discharge_temperature"
+CONF_DEVICE_OUTDOOR_CONDENSER_MID_TEMP = "outdoor_condenser_mid_temperature"
+CONF_DEVICE_OUTDOOR_OPERATION_MODE = "outdoor_operation_mode"
+CONF_DEVICE_OUTDOOR_COMPRESSOR = "outdoor_compressor"
+CONF_DEVICE_OUTDOOR_4WAY_VALVE = "outdoor_4way_valve"
+CONF_DEVICE_OUTDOOR_HOT_GAS_BYPASS = "outdoor_hot_gas_bypass"
+CONF_DEVICE_OUTDOOR_AC_FAN = "outdoor_ac_fan"
+CONF_DEVICE_OUTDOOR_SUMP_TEMP = "outdoor_sump_temperature"
+CONF_DEVICE_OUTDOOR_BLDC_FAN = "outdoor_bldc_fan"
+CONF_DEVICE_OUTDOOR_FREEZE_PROTECTION = "outdoor_freeze_protection"
+CONF_DEVICE_OUTDOOR_HEATING_OVERLOAD = "outdoor_heating_overload"
+CONF_DEVICE_OUTDOOR_DEFROST_CONTROL = "outdoor_defrost_control"
+CONF_DEVICE_OUTDOOR_DISCHARGE_PROTECTION = "outdoor_discharge_protection"
+CONF_DEVICE_OUTDOOR_CURRENT_CONTROL = "outdoor_current_control"
+CONF_DEVICE_INVERTER_MAX_FREQUENCY = "inverter_max_frequency"
+CONF_DEVICE_INVERTER_TOTAL_CAPACITY = "inverter_total_capacity_requirement"
 
 
 def preset_entry(name: str, value: int, displayName: str):
@@ -335,6 +358,164 @@ DEVICE_SCHEMA = cv.Schema(
             icon="mdi:thermometer",
             entity_category="diagnostic",
         ),
+        cv.Optional(CONF_DEVICE_INVERTER_CURRENT_FREQUENCY): sensor.sensor_schema(
+            unit_of_measurement="Hz",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:sine-wave",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_INVERTER_ORDER_FREQUENCY): sensor.sensor_schema(
+            unit_of_measurement="Hz",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:sine-wave",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_INVERTER_TARGET_FREQUENCY): sensor.sensor_schema(
+            unit_of_measurement="Hz",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:sine-wave",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_EEV_A): sensor.sensor_schema(
+            unit_of_measurement="steps",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:valve",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_EEV_B): sensor.sensor_schema(
+            unit_of_measurement="steps",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:valve",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_EEV_C): sensor.sensor_schema(
+            unit_of_measurement="steps",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:valve",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_EEV_D): sensor.sensor_schema(
+            unit_of_measurement="steps",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:valve",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_DISCHARGE_TEMP): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_CONDENSER_MID_TEMP): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_SUMP_TEMP): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_OPERATION_MODE): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:state-machine",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_COMPRESSOR): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:heat-pump",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_4WAY_VALVE): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:pipe-valve",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_HOT_GAS_BYPASS): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:pipe",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_AC_FAN): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:fan",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_BLDC_FAN): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:fan",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_FREEZE_PROTECTION): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:snowflake-alert",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_HEATING_OVERLOAD): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:thermometer-alert",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_DEFROST_CONTROL): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:snowflake-melt",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_DISCHARGE_PROTECTION): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:shield-alert",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_OUTDOOR_CURRENT_CONTROL): sensor.sensor_schema(
+            unit_of_measurement="",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:current-ac",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_INVERTER_MAX_FREQUENCY): sensor.sensor_schema(
+            unit_of_measurement="Hz",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:sine-wave",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_DEVICE_INVERTER_TOTAL_CAPACITY): sensor.sensor_schema(
+            unit_of_measurement="kW",
+            accuracy_decimals=1,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:lightning-bolt",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
     }
 )
 
@@ -513,6 +694,98 @@ async def to_code(config):
             CONF_DEVICE_OUT_OPERATION_HEATCOOL_TEXT: (
                 text_sensor.new_text_sensor,
                 var_dev.set_outdoor_operation_heatcool_text_sensor,
+            ),
+            CONF_DEVICE_INVERTER_CURRENT_FREQUENCY: (
+                sensor.new_sensor,
+                var_dev.set_inverter_current_frequency_hz_sensor,
+            ),
+            CONF_DEVICE_INVERTER_ORDER_FREQUENCY: (
+                sensor.new_sensor,
+                var_dev.set_inverter_order_frequency_hz_sensor,
+            ),
+            CONF_DEVICE_INVERTER_TARGET_FREQUENCY: (
+                sensor.new_sensor,
+                var_dev.set_inverter_target_frequency_hz_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_EEV_A: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_eev_a_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_EEV_B: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_eev_b_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_EEV_C: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_eev_c_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_EEV_D: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_eev_d_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_DISCHARGE_TEMP: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_discharge_temp_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_CONDENSER_MID_TEMP: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_condenser_mid_temp_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_SUMP_TEMP: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_sump_temp_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_OPERATION_MODE: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_operation_mode_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_COMPRESSOR: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_compressor_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_4WAY_VALVE: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_4way_valve_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_HOT_GAS_BYPASS: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_hot_gas_bypass_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_AC_FAN: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_ac_fan_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_BLDC_FAN: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_bldc_fan_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_FREEZE_PROTECTION: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_freeze_protection_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_HEATING_OVERLOAD: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_heating_overload_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_DEFROST_CONTROL: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_defrost_control_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_DISCHARGE_PROTECTION: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_discharge_protection_sensor,
+            ),
+            CONF_DEVICE_OUTDOOR_CURRENT_CONTROL: (
+                sensor.new_sensor,
+                var_dev.set_outdoor_current_control_sensor,
+            ),
+            CONF_DEVICE_INVERTER_MAX_FREQUENCY: (
+                sensor.new_sensor,
+                var_dev.set_inverter_max_frequency_hz_sensor,
+            ),
+            CONF_DEVICE_INVERTER_TOTAL_CAPACITY: (
+                sensor.new_sensor,
+                var_dev.set_inverter_total_capacity_requirement_kw_sensor,
             ),
         }
 

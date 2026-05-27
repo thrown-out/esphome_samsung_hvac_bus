@@ -255,6 +255,121 @@ namespace esphome
         update_device_sensor(address, &Samsung_AC_Device::outdoor_voltage, value);
       }
 
+      void set_inverter_current_frequency(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::inverter_current_frequency_hz, value);
+      }
+
+      void set_inverter_order_frequency(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::inverter_order_frequency_hz, value);
+      }
+
+      void set_inverter_target_frequency(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::inverter_target_frequency_hz, value);
+      }
+
+      void set_outdoor_eev_a(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_eev_a, value);
+      }
+
+      void set_outdoor_eev_b(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_eev_b, value);
+      }
+
+      void set_outdoor_eev_c(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_eev_c, value);
+      }
+
+      void set_outdoor_eev_d(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_eev_d, value);
+      }
+
+      void set_outdoor_discharge_temp(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_discharge_temp, value);
+      }
+
+      void set_outdoor_condenser_mid_temp(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_condenser_mid_temp, value);
+      }
+
+      void set_outdoor_operation_mode(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_operation_mode_sensor, value);
+      }
+
+      void set_outdoor_compressor(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_compressor, value);
+      }
+
+      void set_outdoor_4way_valve(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_4way_valve, value);
+      }
+
+      void set_outdoor_hot_gas_bypass(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_hot_gas_bypass, value);
+      }
+
+      void set_outdoor_ac_fan(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_ac_fan, value);
+      }
+
+      void set_outdoor_sump_temp(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_sump_temp, value);
+      }
+
+      void set_outdoor_bldc_fan(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_bldc_fan, value);
+      }
+
+      void set_outdoor_freeze_protection(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_freeze_protection, value);
+      }
+
+      void set_outdoor_heating_overload(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_heating_overload, value);
+      }
+
+      void set_outdoor_defrost_control(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_defrost_control, value);
+      }
+
+      void set_outdoor_discharge_protection(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_discharge_protection, value);
+      }
+
+      void set_outdoor_current_control(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::outdoor_current_control, value);
+      }
+
+      void set_inverter_max_frequency(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::inverter_max_frequency_hz, value);
+      }
+
+      void set_inverter_total_capacity_requirement(const std::string &address, float value) override
+      {
+        update_device_sensor(address, &Samsung_AC_Device::inverter_total_capacity_requirement_kw, value);
+      }
+
       void set_outdoor_operation_odu_mode_text_sensor(const std::string &address, int value)
       {
         execute_if_device_exists(address, [value](Samsung_AC_Device *dev)

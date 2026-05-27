@@ -900,14 +900,27 @@ namespace esphome
             }
             else if (nonpacket_.cmd == NonNasaCommand::CmdC0)
             {
-                // CmdC0 comes from the outdoor unit and contains outdoor temperature
-                // The temperature is already in Celsius (after subtracting 55 from raw value)
-                // Note: No pending control message check needed here since CmdC0 comes from the
-                // outdoor unit (typically "c8"), while control messages are sent to indoor units.
-                // Outdoor temperature updates are independent status data and should always be processed.
-                // Cast to int8_t first to preserve sign (uint8_t wraps negative values), then to float
-                float temp = static_cast<float>(static_cast<int8_t>(nonpacket_.commandC0.outdoor_unit_outdoor_temp.to_celsius()));
-                target->set_outdoor_temperature(nonpacket_.src, temp);
+                // CmdC0 comes from the outdoor unit. Cast temperatures through int8_t to preserve sign
+                // (uint8_t wraps negative values in the Non-NASA temperature encoding).
+                float outdoor_temp = static_cast<float>(static_cast<int8_t>(nonpacket_.commandC0.outdoor_unit_outdoor_temp.to_celsius()));
+                target->set_outdoor_temperature(nonpacket_.src, outdoor_temp);
+
+                float discharge_temp = static_cast<float>(static_cast<int8_t>(nonpacket_.commandC0.outdoor_unit_discharge_temp.to_celsius()));
+                target->set_outdoor_discharge_temp(nonpacket_.src, discharge_temp);
+
+                float condenser_mid_temp = static_cast<float>(static_cast<int8_t>(nonpacket_.commandC0.outdoor_unit_condenser_mid_temp.to_celsius()));
+                target->set_outdoor_condenser_mid_temp(nonpacket_.src, condenser_mid_temp);
+
+                target->set_outdoor_operation_mode(nonpacket_.src, (float)nonpacket_.commandC0.outdoor_unit_operation_mode);
+                target->set_outdoor_compressor(nonpacket_.src, nonpacket_.commandC0.outdoor_unit_compressor ? 1.0f : 0.0f);
+                target->set_outdoor_4way_valve(nonpacket_.src, nonpacket_.commandC0.outdoor_unit_4_way_valve ? 1.0f : 0.0f);
+                target->set_outdoor_hot_gas_bypass(nonpacket_.src, nonpacket_.commandC0.outdoor_unit_hot_gas_bypass ? 1.0f : 0.0f);
+                target->set_outdoor_ac_fan(nonpacket_.src, (float)(nonpacket_.commandC0.outdoor_unit_ac_fan));
+            }
+            else if (nonpacket_.cmd == NonNasaCommand::CmdC1)
+            {
+                float sump_temp = static_cast<float>(static_cast<int8_t>(nonpacket_.commandC1.outdoor_unit_sump_temp.to_celsius()));
+                target->set_outdoor_sump_temp(nonpacket_.src, sump_temp);
             }
             else if (nonpacket_.cmd == NonNasaCommand::Cmd8D)
             {
@@ -936,16 +949,41 @@ namespace esphome
             }
             else if (nonpacket_.cmd == NonNasaCommand::CmdF0)
             {
-                // CmdF0 comes from the outdoor unit and contains error code and status information
-                // Note: No pending control message check needed here since CmdF0 comes from the
-                // outdoor unit (typically "c8"), while control messages are sent to indoor units.
-                // Outdoor error code updates are independent status data and should always be processed.
+                // CmdF0 comes from the outdoor unit and contains error code, status flags, and inverter frequency data.
                 int error_code = static_cast<int>(nonpacket_.commandF0.outdoor_unit_error_code);
                 if (debug_log_messages && error_code != 0)
                 {
                     LOGW("s:%s d:%s CmdF0 outdoor_unit_error_code %d", nonpacket_.src.c_str(), nonpacket_.dst.c_str(), error_code);
                 }
                 target->set_error_code(nonpacket_.src, error_code);
+                target->set_inverter_current_frequency(nonpacket_.src, (float)nonpacket_.commandF0.inverter_current_frequency_hz);
+                target->set_inverter_order_frequency(nonpacket_.src, (float)nonpacket_.commandF0.inverter_order_frequency_hz);
+                target->set_inverter_target_frequency(nonpacket_.src, (float)nonpacket_.commandF0.inverter_target_frequency_hz);
+                target->set_outdoor_bldc_fan(nonpacket_.src, (float)(nonpacket_.commandF0.outdoor_unit_bldc_fan));
+                target->set_outdoor_freeze_protection(nonpacket_.src, nonpacket_.commandF0.outdoor_unit_freeze_protection ? 1.0f : 0.0f);
+                target->set_outdoor_heating_overload(nonpacket_.src, nonpacket_.commandF0.outdoor_unit_heating_overload ? 1.0f : 0.0f);
+                target->set_outdoor_defrost_control(nonpacket_.src, nonpacket_.commandF0.outdoor_unit_defrost_control ? 1.0f : 0.0f);
+                target->set_outdoor_discharge_protection(nonpacket_.src, nonpacket_.commandF0.outdoor_unit_discharge_protection ? 1.0f : 0.0f);
+                target->set_outdoor_current_control(nonpacket_.src, nonpacket_.commandF0.outdoor_unit_current_control ? 1.0f : 0.0f);
+            }
+            else if (nonpacket_.cmd == NonNasaCommand::CmdF1)
+            {
+                // CmdF1 comes from the outdoor unit and contains electronic expansion valve (EEV) positions.
+                target->set_outdoor_eev_a(nonpacket_.src, (float)nonpacket_.commandF1.outdoor_unit_EEV_A);
+                target->set_outdoor_eev_b(nonpacket_.src, (float)nonpacket_.commandF1.outdoor_unit_EEV_B);
+                target->set_outdoor_eev_c(nonpacket_.src, (float)nonpacket_.commandF1.outdoor_unit_EEV_C);
+                target->set_outdoor_eev_d(nonpacket_.src, (float)nonpacket_.commandF1.outdoor_unit_EEV_D);
+            }
+            else if (nonpacket_.cmd == NonNasaCommand::CmdF3)
+            {
+                // CmdF3 comes from the outdoor unit and contains DC inverter current, voltage, and calculated power.
+                // Route to the same sensors as Cmd8D (outdoor_current / outdoor_voltage / outdoor_instantaneous_power)
+                // since both packets describe inverter power data and most Non-NASA units send one or the other.
+                target->set_outdoor_instantaneous_power(nonpacket_.src, nonpacket_.commandF3.inverter_power_w);
+                target->set_outdoor_current(nonpacket_.src, nonpacket_.commandF3.inverter_current_a);
+                target->set_outdoor_voltage(nonpacket_.src, nonpacket_.commandF3.inverter_voltage_v);
+                target->set_inverter_max_frequency(nonpacket_.src, (float)nonpacket_.commandF3.inverter_max_frequency_hz);
+                target->set_inverter_total_capacity_requirement(nonpacket_.src, nonpacket_.commandF3.inverter_total_capacity_requirement_kw);
             }
             else if (nonpacket_.cmd == NonNasaCommand::CmdC6)
             {

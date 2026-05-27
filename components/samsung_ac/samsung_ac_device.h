@@ -127,6 +127,29 @@ namespace esphome
       sensor::Sensor *outdoor_cumulative_energy{nullptr};
       sensor::Sensor *outdoor_current{nullptr};
       sensor::Sensor *outdoor_voltage{nullptr};
+      sensor::Sensor *inverter_current_frequency_hz{nullptr};
+      sensor::Sensor *inverter_order_frequency_hz{nullptr};
+      sensor::Sensor *inverter_target_frequency_hz{nullptr};
+      sensor::Sensor *outdoor_eev_a{nullptr};
+      sensor::Sensor *outdoor_eev_b{nullptr};
+      sensor::Sensor *outdoor_eev_c{nullptr};
+      sensor::Sensor *outdoor_eev_d{nullptr};
+      sensor::Sensor *outdoor_discharge_temp{nullptr};
+      sensor::Sensor *outdoor_condenser_mid_temp{nullptr};
+      sensor::Sensor *outdoor_operation_mode_sensor{nullptr};
+      sensor::Sensor *outdoor_compressor{nullptr};
+      sensor::Sensor *outdoor_4way_valve{nullptr};
+      sensor::Sensor *outdoor_hot_gas_bypass{nullptr};
+      sensor::Sensor *outdoor_ac_fan{nullptr};
+      sensor::Sensor *outdoor_sump_temp{nullptr};
+      sensor::Sensor *outdoor_bldc_fan{nullptr};
+      sensor::Sensor *outdoor_freeze_protection{nullptr};
+      sensor::Sensor *outdoor_heating_overload{nullptr};
+      sensor::Sensor *outdoor_defrost_control{nullptr};
+      sensor::Sensor *outdoor_discharge_protection{nullptr};
+      sensor::Sensor *outdoor_current_control{nullptr};
+      sensor::Sensor *inverter_max_frequency_hz{nullptr};
+      sensor::Sensor *inverter_total_capacity_requirement_kw{nullptr};
       text_sensor::TextSensor *outdoor_operation_odu_mode_text{nullptr};
       text_sensor::TextSensor *outdoor_operation_heatcool_text{nullptr};
 
@@ -187,6 +210,31 @@ namespace esphome
       {
         outdoor_voltage = sensor;
       }
+
+      void set_inverter_current_frequency_hz_sensor(sensor::Sensor *sensor) { inverter_current_frequency_hz = sensor; }
+      void set_inverter_order_frequency_hz_sensor(sensor::Sensor *sensor) { inverter_order_frequency_hz = sensor; }
+      void set_inverter_target_frequency_hz_sensor(sensor::Sensor *sensor) { inverter_target_frequency_hz = sensor; }
+      void set_outdoor_eev_a_sensor(sensor::Sensor *sensor) { outdoor_eev_a = sensor; }
+      void set_outdoor_eev_b_sensor(sensor::Sensor *sensor) { outdoor_eev_b = sensor; }
+      void set_outdoor_eev_c_sensor(sensor::Sensor *sensor) { outdoor_eev_c = sensor; }
+      void set_outdoor_eev_d_sensor(sensor::Sensor *sensor) { outdoor_eev_d = sensor; }
+
+      void set_outdoor_discharge_temp_sensor(sensor::Sensor *sensor) { outdoor_discharge_temp = sensor; }
+      void set_outdoor_condenser_mid_temp_sensor(sensor::Sensor *sensor) { outdoor_condenser_mid_temp = sensor; }
+      void set_outdoor_operation_mode_sensor(sensor::Sensor *sensor) { outdoor_operation_mode_sensor = sensor; }
+      void set_outdoor_compressor_sensor(sensor::Sensor *sensor) { outdoor_compressor = sensor; }
+      void set_outdoor_4way_valve_sensor(sensor::Sensor *sensor) { outdoor_4way_valve = sensor; }
+      void set_outdoor_hot_gas_bypass_sensor(sensor::Sensor *sensor) { outdoor_hot_gas_bypass = sensor; }
+      void set_outdoor_ac_fan_sensor(sensor::Sensor *sensor) { outdoor_ac_fan = sensor; }
+      void set_outdoor_sump_temp_sensor(sensor::Sensor *sensor) { outdoor_sump_temp = sensor; }
+      void set_outdoor_bldc_fan_sensor(sensor::Sensor *sensor) { outdoor_bldc_fan = sensor; }
+      void set_outdoor_freeze_protection_sensor(sensor::Sensor *sensor) { outdoor_freeze_protection = sensor; }
+      void set_outdoor_heating_overload_sensor(sensor::Sensor *sensor) { outdoor_heating_overload = sensor; }
+      void set_outdoor_defrost_control_sensor(sensor::Sensor *sensor) { outdoor_defrost_control = sensor; }
+      void set_outdoor_discharge_protection_sensor(sensor::Sensor *sensor) { outdoor_discharge_protection = sensor; }
+      void set_outdoor_current_control_sensor(sensor::Sensor *sensor) { outdoor_current_control = sensor; }
+      void set_inverter_max_frequency_hz_sensor(sensor::Sensor *sensor) { inverter_max_frequency_hz = sensor; }
+      void set_inverter_total_capacity_requirement_kw_sensor(sensor::Sensor *sensor) { inverter_total_capacity_requirement_kw = sensor; }
 
       void set_outdoor_temperature_sensor(sensor::Sensor *sensor)
       {
