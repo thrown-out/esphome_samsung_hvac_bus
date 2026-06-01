@@ -783,6 +783,26 @@ namespace esphome
             target->publish_data(0, std::move(data));
         }
 
+        // Returns true only for NonNasaMode values that are defined in the protocol.
+        // Unknown values (e.g. from a corrupted Cmd20 byte) default to Auto in nonnasa_mode_to_mode(),
+        // which with map_auto_to_heat_cool=true produces a spurious Heat/Cool flip in HA.
+        // Skipping the set_mode() call for unknown values prevents that glitch.
+        static bool is_valid_nonnasa_mode(NonNasaMode mode)
+        {
+            switch (mode)
+            {
+            case NonNasaMode::Heat:
+            case NonNasaMode::Cool:
+            case NonNasaMode::Dry:
+            case NonNasaMode::Fan:
+            case NonNasaMode::Auto_Heat:
+            case NonNasaMode::Auto:
+                return true;
+            default:
+                return false;
+            }
+        }
+
         void process_non_nasa_packet(MessageTarget *target)
         {
             if (debug_log_undefined_messages)
@@ -864,26 +884,35 @@ namespace esphome
 
                 // Publish EVA (evaporator) temperatures - pipe_in/pipe_out are equivalent to eva_in/eva_out
                 // These are sensor readings and should always be published, regardless of pending control messages
-                // Compare to CmdC0 and Cmd8D handlers which explicitly do not check for pending control messages
-                // Cast to int8_t first to preserve sign (uint8_t wraps negative values), then to float
-                float pipe_in_temp = nonpacket_.command20.pipe_in.to_celsius();
-                float pipe_out_temp = nonpacket_.command20.pipe_out.to_celsius();
+                // Cast to int8_t first to preserve sign: the Non-NASA temperature encoding stores values as
+                // uint8_t(raw - 55), so temperatures below 55 wrap around (e.g. 0°C → uint8_t(200)).
+                // Without the cast, a corrupted byte producing a low raw value yields implausibly high temps.
+                float pipe_in_temp = static_cast<float>(static_cast<int8_t>(nonpacket_.command20.pipe_in.to_celsius()));
+                float pipe_out_temp = static_cast<float>(static_cast<int8_t>(nonpacket_.command20.pipe_out.to_celsius()));
                 target->set_indoor_eva_in_temperature(nonpacket_.src, pipe_in_temp);
                 target->set_indoor_eva_out_temperature(nonpacket_.src, pipe_out_temp);
 
                 if (!pending_control_message)
                 {
                     last_command20s_[nonpacket_.src] = nonpacket_.command20;
-                    target->set_target_temperature(nonpacket_.src, nonpacket_.command20.target_temp.to_celsius());
+                    target->set_target_temperature(nonpacket_.src, static_cast<float>(static_cast<int8_t>(nonpacket_.command20.target_temp.to_celsius())));
                     // TODO
                     target->set_water_outlet_target(nonpacket_.src, false);
                     // TODO
                     target->set_target_water_temperature(nonpacket_.src, false);
-                    target->set_room_temperature(nonpacket_.src, nonpacket_.command20.room_temp.to_celsius());
+                    target->set_room_temperature(nonpacket_.src, static_cast<float>(static_cast<int8_t>(nonpacket_.command20.room_temp.to_celsius())));
                     target->set_power(nonpacket_.src, nonpacket_.command20.power);
                     // TODO
                     target->set_water_heater_power(nonpacket_.src, false);
-                    target->set_mode(nonpacket_.src, nonnasa_mode_to_mode(nonpacket_.command20.mode));
+                    if (is_valid_nonnasa_mode(nonpacket_.command20.mode))
+                    {
+                        target->set_mode(nonpacket_.src, nonnasa_mode_to_mode(nonpacket_.command20.mode));
+                    }
+                    else if (debug_log_messages)
+                    {
+                        LOGW("Cmd20: skipping unknown mode 0x%02X from %s (likely CRC glitch)",
+                             (uint8_t)nonpacket_.command20.mode, nonpacket_.src.c_str());
+                    }
                     // TODO
                     target->set_water_heater_mode(nonpacket_.src, nonnasa_water_heater_mode_to_mode(-0));
                     target->set_fanmode(nonpacket_.src, nonnasa_fanspeed_to_fanmode(nonpacket_.command20.fanspeed));
