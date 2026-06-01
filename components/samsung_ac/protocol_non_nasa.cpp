@@ -357,7 +357,16 @@ namespace esphome
                 return {DecodeResultType::Discard, 1};
 
             if (data[13] != 0x34)
+            {
+                // Fast resync: end byte mismatch means we're out of sync.
+                // Skip forward to the next 0x32 start byte instead of discarding just 1 byte.
+                for (size_t i = 1; i < data.size(); i++)
+                {
+                    if (data[i] == 0x32)
+                        return {DecodeResultType::Discard, (uint16_t)i};
+                }
                 return {DecodeResultType::Discard, 1};
+            }
 
             // Validate checksum against first 14 bytes
             uint8_t crc_expected = build_checksum(data); // uses bytes [1..11]
