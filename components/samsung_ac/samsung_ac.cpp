@@ -17,6 +17,12 @@ namespace esphome
       if (this->flow_control_pin_ != nullptr)
       {
         this->flow_control_pin_->setup();
+        this->flow_control_pin_->digital_write(false); // ensure RX mode (LOW) from the start
+      }
+      startup_started_at_ms_ = millis();
+      if (startup_delay_ms_ > 0)
+      {
+        LOGI("Startup delay: TX disabled for %d s, RX active.", startup_delay_ms_ / 1000);
       }
     }
 
@@ -135,6 +141,15 @@ namespace esphome
       // if more data is expected, do not allow anything to be written
       if (!read_data())
         return;
+
+      // Startup delay: block TX until delay has elapsed; RX continues above
+      if (!startup_tx_enabled_)
+      {
+        if ((millis() - startup_started_at_ms_) < startup_delay_ms_)
+          return;
+        startup_tx_enabled_ = true;
+        LOGI("Startup delay elapsed, TX enabled.");
+      }
 
       // If there is no data we use the time to send
       // And if written, break the loop

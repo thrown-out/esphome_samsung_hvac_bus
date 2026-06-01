@@ -77,6 +77,11 @@ namespace esphome
         this->flow_control_pin_ = flow_control_pin;
       }
 
+      void set_startup_delay(uint32_t seconds)
+      {
+        startup_delay_ms_ = seconds * 1000;
+      }
+
       void set_debug_mqtt(std::string host, int port, std::string username, std::string password)
       {
         debug_mqtt_host = host;
@@ -408,6 +413,11 @@ namespace esphome
       uint32_t last_protocol_update_ = 0;
 
       bool data_processing_init = true;
+
+      // startup delay
+      uint32_t startup_delay_ms_ = 120000;  // default 120s, configured via YAML
+      uint32_t startup_started_at_ms_ = 0;
+      bool startup_tx_enabled_ = false;     // flips to true once delay has elapsed (for one-shot log)
 
       // settings from yaml
       GPIOPin *flow_control_pin_{nullptr};

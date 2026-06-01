@@ -357,7 +357,16 @@ namespace esphome
                 return {DecodeResultType::Discard, 1};
 
             if (data[13] != 0x34)
+            {
+                // Fast resync: end byte mismatch means we're out of sync.
+                // Skip forward to the next 0x32 start byte instead of discarding just 1 byte.
+                for (size_t i = 1; i < data.size(); i++)
+                {
+                    if (data[i] == 0x32)
+                        return {DecodeResultType::Discard, (uint16_t)i};
+                }
                 return {DecodeResultType::Discard, 1};
+            }
 
             // Validate checksum against first 14 bytes
             uint8_t crc_expected = build_checksum(data); // uses bytes [1..11]
@@ -370,7 +379,14 @@ namespace esphome
                          crc_actual, crc_expected,
                          bytes_to_hex(std::vector<uint8_t>(data.begin(), data.begin() + 14)).c_str());
 
-                // resync gently (consume 1) - safer in streams
+                // Fast resync: skip forward to the next 0x32 start byte.
+                // Discarding only 1 byte is slow (up to 14 iterations per bad frame) and each
+                // misaligned frame has a 1/256 chance of passing CRC, causing spurious sensor updates.
+                for (size_t i = 1; i < data.size(); i++)
+                {
+                    if (data[i] == 0x32)
+                        return {DecodeResultType::Discard, (uint16_t)i};
+                }
                 return {DecodeResultType::Discard, 1};
             }
 
@@ -417,25 +433,11 @@ namespace esphome
 
             case NonNasaCommand::Cmd8D:
                 // Cmd8D from outdoor unit - contains power/energy data
-                // Format: current raw value = data[8], voltage = data[10] * 2
-                //
-                // Power calculation consistency explanation:
-                // The current sensor has a filter (multiply: 0.1) that will apply to the published current value.
-                // To maintain the fundamental relationship: published_power = published_current × published_voltage,
-                // we must apply the same 0.1 multiplier to the power calculation.
-                //
-                // Example: raw_current=100, raw_voltage=120 (raw)
-                //   - Calculated current = 100 / 10 = 10A
-                //   - Published current = 10 * 0.1 = 1A (after filter)
-                //   - Calculated voltage = 120 * 2 = 240V
-                //   - Published voltage = 240V (no filter)
-                //   - Calculated power = (100 / 10) * 0.1 * (120 * 2) = 1 * 240 = 240W
-                //   - Published power = 240W
-                //   - Verification: 1A × 240V = 240W ✓
-                //
-                command8D.inverter_current_a = (float)data[8] / 10;                                              // Current in Amps (raw value / 10)
-                command8D.inverter_voltage_v = (float)data[10] * 2;                                              // Voltage in Volts (raw value * 2)
-                command8D.inverter_power_w = command8D.inverter_current_a * 0.1f * command8D.inverter_voltage_v; // Power in Watts
+                // Format: data[8] = current (raw / 10 → Amps), data[10] = voltage (raw × 2 → Volts)
+                // Power = current_A × voltage_V (no YAML-filter coupling here)
+                command8D.inverter_current_a = (float)data[8] / 10;                            // Current in Amps
+                command8D.inverter_voltage_v = (float)data[10] * 2;                            // Voltage in Volts
+                command8D.inverter_power_w = command8D.inverter_current_a * command8D.inverter_voltage_v; // Power in Watts
                 return {DecodeResultType::Processed, 14};
 
             case NonNasaCommand::CmdF0:
@@ -463,7 +465,7 @@ namespace esphome
                 commandF3.inverter_total_capacity_requirement_kw = (float)data[5] / 10;
                 commandF3.inverter_current_a = (float)data[8] / 10;
                 commandF3.inverter_voltage_v = (float)data[9] * 2;
-                commandF3.inverter_power_w = commandF3.inverter_current_a * 0.1f * commandF3.inverter_voltage_v;
+                commandF3.inverter_power_w = commandF3.inverter_current_a * commandF3.inverter_voltage_v;
                 return {DecodeResultType::Processed, 14};
 
             default:

@@ -93,6 +93,7 @@ CONF_DEVICE_OUT_SENSOR_VOLTAGE = "outdoor_voltage"
 CONF_MAP_AUTO_TO_HEAT_COOL = "map_auto_to_heat_cool"
 CONF_DEBUG_LOG_MESSAGES_ON_CHANGE = "debug_log_messages_on_change"
 CONF_NON_NASA_TX_DELAY_MS = "non_nasa_tx_delay_ms"
+CONF_STARTUP_DELAY = "startup_delay"
 
 CONF_CAPABILITIES = "capabilities"
 CONF_CAPABILITIES_FAN_MODES = "fan_modes"
@@ -331,7 +332,7 @@ DEVICE_SCHEMA = cv.Schema(
             {
                 cv.Optional(CONF_DEVICE_CUSTOM_MESSAGE, default=0x8217): cv.hex_int,
                 cv.Optional(
-                    CONF_FILTERS, default=[{"multiply": 0.1}]
+                    CONF_FILTERS, default=[]
                 ): sensor.validate_filters,
             }
         ),
@@ -555,6 +556,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_NON_NASA_TX_DELAY_MS, default=0): cv.int_range(
                 min=0, max=1000
             ),
+            cv.Optional(CONF_STARTUP_DELAY, default=120): cv.positive_int,
             cv.Optional(CONF_DEBUG_LOG_UNDEFINED_MESSAGES, default=False): cv.boolean,
             cv.Optional(CONF_CAPABILITIES): CAPABILITIES_SCHEMA,
             cv.Optional(CONF_DEBUG_LOG_MESSAGES_ON_CHANGE, default=False): cv.boolean,
@@ -914,6 +916,7 @@ async def to_code(config):
         CONF_DEBUG_LOG_MESSAGES_RAW: var.set_debug_log_messages_raw,
         CONF_NON_NASA_KEEPALIVE: var.set_non_nasa_keepalive,
         CONF_NON_NASA_TX_DELAY_MS: var.set_non_nasa_tx_delay_ms,
+        CONF_STARTUP_DELAY: var.set_startup_delay,
         CONF_DEBUG_LOG_UNDEFINED_MESSAGES: var.set_debug_log_undefined_messages,
         CONF_DEBUG_LOG_MESSAGES_ON_CHANGE: var.set_debug_log_messages_on_change,
     }
