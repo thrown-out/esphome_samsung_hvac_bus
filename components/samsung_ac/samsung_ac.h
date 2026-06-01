@@ -418,6 +418,7 @@ namespace esphome
       uint32_t startup_delay_ms_ = 120000;  // default 120s, configured via YAML
       uint32_t startup_started_at_ms_ = 0;
       bool startup_tx_enabled_ = false;     // flips to true once delay has elapsed (for one-shot log)
+      uint32_t startup_last_log_ms_ = 0;    // for periodic "Xs remaining" log
 
       // settings from yaml
       GPIOPin *flow_control_pin_{nullptr};

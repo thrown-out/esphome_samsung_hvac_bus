@@ -138,18 +138,32 @@ namespace esphome
       if (data_processing_init)
         return;
 
-      // if more data is expected, do not allow anything to be written
-      if (!read_data())
-        return;
-
-      // Startup delay: block TX until delay has elapsed; RX continues above
+      // Startup delay: evaluated on every loop() call, independent of bus activity.
+      // Must be checked BEFORE read_data() — an active bus can keep read_data() returning
+      // false indefinitely, which would prevent this block from ever being reached.
       if (!startup_tx_enabled_)
       {
-        if ((millis() - startup_started_at_ms_) < startup_delay_ms_)
+        const uint32_t now_sd = millis();
+        const uint32_t elapsed = now_sd - startup_started_at_ms_;
+        if (elapsed < startup_delay_ms_)
+        {
+          // Log remaining time every 5 seconds
+          if (now_sd - startup_last_log_ms_ >= 5000)
+          {
+            startup_last_log_ms_ = now_sd;
+            LOGI("Startup delay: TX disabled, %ds remaining.", (startup_delay_ms_ - elapsed) / 1000);
+          }
+          // RX continues: read incoming data but do not proceed to TX
+          read_data();
           return;
+        }
         startup_tx_enabled_ = true;
         LOGI("Startup delay elapsed, TX enabled.");
       }
+
+      // if more data is expected, do not allow anything to be written
+      if (!read_data())
+        return;
 
       // If there is no data we use the time to send
       // And if written, break the loop
