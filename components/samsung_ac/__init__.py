@@ -331,7 +331,7 @@ DEVICE_SCHEMA = cv.Schema(
             {
                 cv.Optional(CONF_DEVICE_CUSTOM_MESSAGE, default=0x8217): cv.hex_int,
                 cv.Optional(
-                    CONF_FILTERS, default=[{"multiply": 0.1}]
+                    CONF_FILTERS, default=[]
                 ): sensor.validate_filters,
             }
         ),
