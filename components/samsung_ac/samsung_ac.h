@@ -228,7 +228,7 @@ namespace esphome
                                  { dev->update_swing_horizontal(horizontal); });
       }
 
-      void set_blade_position(const std::string address, uint8_t value) override
+      void set_blade_position(const std::string &address, uint8_t value) override
       {
         execute_if_device_exists(address, [value](Samsung_AC_Device *dev)
                                  { dev->update_blade_position(value); });
