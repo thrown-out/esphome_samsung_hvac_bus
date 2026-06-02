@@ -91,6 +91,7 @@ namespace esphome
       }
 
       void set_debug_log_messages_on_change(bool v) { debug_log_messages_on_change = v; }
+      void set_debug_log_message_raw(bool v) { debug_log_message_raw = v; }
 
       void set_debug_log_messages(bool value)
       {

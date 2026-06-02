@@ -13,6 +13,7 @@ bool debug_log_undefined_messages = false;
 
 // NEW:
 bool debug_log_messages_on_change = false;
+bool debug_log_message_raw = false;
 
 struct DedupEntry {
   double last = 0.0;

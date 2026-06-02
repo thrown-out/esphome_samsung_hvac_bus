@@ -343,6 +343,10 @@ namespace esphome
             }
             }
 
+            if (debug_log_message_raw)
+            {
+                str += ";raw:" + bytes_to_hex(std::vector<uint8_t>(raw_packet + 4, raw_packet + 12));
+            }
             str += "}";
             return str;
         }
@@ -393,6 +397,7 @@ namespace esphome
             }
 
             // Decode using first 14 bytes
+            std::copy(data.begin(), data.begin() + 14, raw_packet);
             src = long_to_hex(data[1]);
             dst = long_to_hex(data[2]);
 

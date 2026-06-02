@@ -27,6 +27,7 @@ namespace esphome
 
         extern bool debug_log_messages;
         extern bool debug_log_undefined_messages;
+        extern bool debug_log_message_raw;
         extern bool debug_log_raw_bytes;
 
         // NEW:

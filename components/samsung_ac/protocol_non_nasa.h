@@ -182,6 +182,8 @@ namespace esphome
 
             NonNasaCommand cmd;
 
+            uint8_t raw_packet[14] = {};  // copy of the raw 14-byte frame for debug logging
+
             NonNasaDataPacket()
             {
             }
