@@ -213,9 +213,7 @@ namespace esphome
             str += "power:" + std::to_string(power ? 1 : 0) + "; ";
             str += "wind_direction:" + std::to_string((uint8_t)wind_direction) + "; ";
             str += "fanspeed:" + std::to_string((uint8_t)fanspeed) + "; ";
-            str += "mode:" + long_to_hex((uint8_t)mode) + "; ";
-            str += "blade_position:" + std::to_string(blade_position) + "; ";
-            str += "quiet:" + std::to_string(quiet_mode ? 1 : 0);
+            str += "mode:" + long_to_hex((uint8_t)mode);
             return str;
         }
 
@@ -627,8 +625,9 @@ namespace esphome
                 request.fanspeed = last_command20_.fanspeed;
                 request.mode = last_command20_.mode;
                 request.wind_direction = last_command20_.wind_direction;
-                request.blade_position = last_command20_.blade_position;
-                request.quiet_mode     = last_command20_.quiet_mode;
+                // blade_position and quiet_mode: not copied from Cmd20 status since
+                // cmd:20 data[10] does not encode these on this hardware.
+                // quiet_mode comes from cmd:23; blade_position control is unresolved.
             }
 
             return request;

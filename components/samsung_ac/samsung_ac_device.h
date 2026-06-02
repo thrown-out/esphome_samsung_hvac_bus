@@ -477,21 +477,16 @@ namespace esphome
       {
         if (climate != nullptr)
         {
-          if (value == 0)
-          {
-            // No preset / normal mode — clear any active preset
-            climate->clear_preset_();
-            climate->clear_custom_preset_();
-            climate->publish_state();
-            return;
-          }
-
           auto supported = get_supported_alt_modes();
           auto mode = std::find_if(supported->begin(), supported->end(), [&value](const AltModeDesc &x)
                                    { return x.value == value; });
           if (mode == supported->end())
           {
-            ESP_LOGW(TAG, "Unsupported alt_mode %d - add it to presets in YAML", value);
+            // value 0 maps to the "None" alt mode, which is auto-registered when any
+            // preset is enabled. If we land here for value 0, no presets are configured
+            // in YAML at all - silently ignore. For other values, warn.
+            if (value != 0)
+              ESP_LOGW(TAG, "Unsupported alt_mode %d - add it to presets in YAML", value);
             return;
           }
 
