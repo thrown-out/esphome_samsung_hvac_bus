@@ -477,17 +477,25 @@ namespace esphome
       {
         if (climate != nullptr)
         {
+          if (value == 0)
+          {
+            // No preset / normal mode — clear any active preset
+            climate->clear_preset_();
+            climate->clear_custom_preset_();
+            climate->publish_state();
+            return;
+          }
+
           auto supported = get_supported_alt_modes();
           auto mode = std::find_if(supported->begin(), supported->end(), [&value](const AltModeDesc &x)
                                    { return x.value == value; });
           if (mode == supported->end())
           {
-            ESP_LOGW(TAG, "Unsupported alt_mode %d", value);
+            ESP_LOGW(TAG, "Unsupported alt_mode %d - add it to presets in YAML", value);
             return;
           }
 
           climate->apply_altmode_from_device(*mode);
-
           climate->publish_state();
         }
       }

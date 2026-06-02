@@ -418,8 +418,8 @@ namespace esphome
                 command20.mode = (NonNasaMode)(data[8] & 0b00111111);
                 command20.power = data[8] & 0b10000000;
                 command20.pipe_out = Temperature::decode(data[11]);
-                command20.blade_position = data[10] & 0x0F;   // bits 3:0; 0=auto, 1-7=fixed
-                command20.quiet_mode     = (data[10] & 0x20) != 0; // bit 5
+                // data[10]: quiet and blade_position are NOT encoded here on this hardware.
+                // Quiet status comes from cmd:23 b3 bit0. Blade position is not on RS485.
 
                 if (command20.wind_direction == (NonNasaWindDirection)0)
                     command20.wind_direction = NonNasaWindDirection::Stop;
@@ -956,7 +956,6 @@ namespace esphome
                     target->set_swing_vertical(nonpacket_.src,
                                                (nonpacket_.command20.wind_direction == NonNasaWindDirection::Vertical) ||
                                                    (nonpacket_.command20.wind_direction == NonNasaWindDirection::FourWay));
-                    target->set_blade_position(nonpacket_.src, nonpacket_.command20.blade_position);
                 }
             }
             else if (nonpacket_.cmd == NonNasaCommand::Cmd23)
