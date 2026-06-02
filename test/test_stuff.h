@@ -347,6 +347,12 @@ public:
     void set_inverter_total_capacity_requirement(const std::string &address, float value) override
         { cout << "> " << address << " set_inverter_total_capacity_requirement=" << to_string(value) << endl; }
 
+    // Cmd20: blade position
+    uint8_t last_set_blade_position_value{0};
+    void set_blade_position(const std::string &address, uint8_t value) override
+        { cout << "> " << address << " set_blade_position=" << to_string(value) << endl;
+          last_set_blade_position_value = value; }
+
         void assert_only_address(const std::string address)
         {
             assert(last_register_address == address);

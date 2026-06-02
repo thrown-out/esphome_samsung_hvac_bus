@@ -131,6 +131,8 @@ namespace esphome
             // CmdF3: inverter capacity data
             virtual void set_inverter_max_frequency(const std::string &address, float value) = 0;
             virtual void set_inverter_total_capacity_requirement(const std::string &address, float value) = 0;
+            // Cmd20: blade position
+            virtual void set_blade_position(const std::string &address, uint8_t value) = 0;
         };
 
         struct ProtocolRequest
@@ -147,6 +149,7 @@ namespace esphome
             optional<FanMode> fan_mode;
             optional<SwingMode> swing_mode;
             optional<AltMode> alt_mode;
+            optional<uint8_t> blade_position;  // 0 = auto/unset, 1-7 = fixed position
         };
 
         class Protocol

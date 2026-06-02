@@ -156,6 +156,7 @@ namespace esphome
       Samsung_AC_Number *target_temperature{nullptr};
       Samsung_AC_Number *water_outlet_target{nullptr};
       Samsung_AC_Number *target_water_temperature{nullptr};
+      Samsung_AC_Number *blade_position{nullptr};
       Samsung_AC_Switch *power{nullptr};
       Samsung_AC_Switch *automatic_cleaning{nullptr};
       Samsung_AC_Switch *water_heater_power{nullptr};
@@ -347,6 +348,17 @@ namespace esphome
         };
       };
 
+      void set_blade_position_number(Samsung_AC_Number *number)
+      {
+        blade_position = number;
+        blade_position->write_state_ = [this](float value)
+        {
+          ProtocolRequest request;
+          request.blade_position = (uint8_t)value;
+          publish_request(request);
+        };
+      };
+
       void set_water_outlet_target_number(Samsung_AC_Number *number)
       {
         water_outlet_target = number;
@@ -385,6 +397,12 @@ namespace esphome
           climate->target_temperature = value;
           climate->publish_state();
         }
+      }
+
+      void update_blade_position(uint8_t value)
+      {
+        if (blade_position != nullptr)
+          blade_position->publish_state((float)value);
       }
 
       void update_water_outlet_target(float value)

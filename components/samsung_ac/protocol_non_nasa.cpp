@@ -406,6 +406,8 @@ namespace esphome
                 command20.mode = (NonNasaMode)(data[8] & 0b00111111);
                 command20.power = data[8] & 0b10000000;
                 command20.pipe_out = Temperature::decode(data[11]);
+                command20.blade_position = data[10] & 0x0F;   // bits 3:0; 0=auto, 1-7=fixed
+                command20.quiet_mode     = (data[10] & 0x20) != 0; // bit 5
 
                 if (command20.wind_direction == (NonNasaWindDirection)0)
                     command20.wind_direction = NonNasaWindDirection::Stop;
@@ -585,6 +587,8 @@ namespace esphome
             data[8] = !power ? (uint8_t)0xC0 : (uint8_t)0xF0;
             data[8] |= (individual ? 6U : 4U);
             data[9] = (uint8_t)0x21;
+            data[10] = (blade_position & 0x0F)     // bits 3:0: fixed blade position
+                     | (quiet_mode ? 0x20 : 0x00); // bit 5: quiet mode
             data[12] = build_checksum(data);
 
             return data;
@@ -605,6 +609,8 @@ namespace esphome
                 request.fanspeed = last_command20_.fanspeed;
                 request.mode = last_command20_.mode;
                 request.wind_direction = last_command20_.wind_direction;
+                request.blade_position = last_command20_.blade_position;
+                request.quiet_mode     = last_command20_.quiet_mode;
             }
 
             return request;
@@ -666,7 +672,9 @@ namespace esphome
 
             if (request.alt_mode)
             {
-                LOGW("change altmode is currently not implemented");
+                // AltMode value 2 = quiet (matches PRESETS in __init__.py)
+                // Any other value (including 0 = normal) disables quiet mode
+                req.quiet_mode = (request.alt_mode.value() == 2);
             }
 
             if (request.swing_mode)
@@ -674,6 +682,9 @@ namespace esphome
                 NonNasaWindDirection wind_dir = swingmode_to_wind_direction(request.swing_mode.value());
                 req.wind_direction = wind_dir;
             }
+
+            if (request.blade_position)
+                req.blade_position = request.blade_position.value();
 
             // Add to the queue with the current time
             NonNasaRequestQueueItem reqItem = NonNasaRequestQueueItem();
@@ -918,8 +929,8 @@ namespace esphome
                     // TODO
                     target->set_water_heater_mode(nonpacket_.src, nonnasa_water_heater_mode_to_mode(-0));
                     target->set_fanmode(nonpacket_.src, nonnasa_fanspeed_to_fanmode(nonpacket_.command20.fanspeed));
-                    // TODO
-                    target->set_altmode(nonpacket_.src, 0);
+                    // AltMode 2 = quiet, 0 = normal (matches PRESETS in __init__.py)
+                    target->set_altmode(nonpacket_.src, nonpacket_.command20.quiet_mode ? 2 : 0);
                     // Cmd20 swing decode: converting wind_direction to vertical/horizontal booleans
                     target->set_swing_horizontal(nonpacket_.src,
                                                  (nonpacket_.command20.wind_direction == NonNasaWindDirection::Horizontal) ||
@@ -927,6 +938,7 @@ namespace esphome
                     target->set_swing_vertical(nonpacket_.src,
                                                (nonpacket_.command20.wind_direction == NonNasaWindDirection::Vertical) ||
                                                    (nonpacket_.command20.wind_direction == NonNasaWindDirection::FourWay));
+                    target->set_blade_position(nonpacket_.src, nonpacket_.command20.blade_position);
                 }
             }
             else if (nonpacket_.cmd == NonNasaCommand::CmdC0)

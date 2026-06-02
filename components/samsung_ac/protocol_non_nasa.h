@@ -67,6 +67,8 @@ namespace esphome
             NonNasaWindDirection wind_direction = NonNasaWindDirection::Stop;
 
             bool power = false;
+            uint8_t blade_position = 0;  // data[10] bits 3:0; 0=auto, 1-7=fixed position
+            bool quiet_mode = false;     // data[10] bit 5
 
             std::string to_string();
         };
@@ -213,6 +215,8 @@ namespace esphome
             NonNasaMode mode = NonNasaMode::Heat;
             bool power = false;
             NonNasaWindDirection wind_direction = NonNasaWindDirection::Stop;
+            uint8_t blade_position = 0;  // 0=auto/unset, 1-7=fixed position
+            bool quiet_mode = false;     // data[10] bit 5
 
             std::vector<uint8_t> encode();
             std::string to_string();
