@@ -213,7 +213,9 @@ namespace esphome
             str += "power:" + std::to_string(power ? 1 : 0) + "; ";
             str += "wind_direction:" + std::to_string((uint8_t)wind_direction) + "; ";
             str += "fanspeed:" + std::to_string((uint8_t)fanspeed) + "; ";
-            str += "mode:" + long_to_hex((uint8_t)mode);
+            str += "mode:" + long_to_hex((uint8_t)mode) + "; ";
+            str += "blade_position:" + std::to_string(blade_position) + "; ";
+            str += "quiet:" + std::to_string(quiet_mode ? 1 : 0);
             return str;
         }
 
