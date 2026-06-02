@@ -103,6 +103,16 @@ namespace esphome
             };
         };
 
+        struct NonNasaCommand23  // from indoor unit — mode/preset status
+        {
+            bool quiet_mode = false;  // data[7] bit0: 1=quiet ON, 0=quiet OFF
+
+            std::string to_string()
+            {
+                return "quiet:" + std::to_string(quiet_mode ? 1 : 0);
+            };
+        };
+
         struct NonNasaCommandF0 // from outdoor unit
         {
             bool outdoor_unit_freeze_protection = false;
@@ -164,6 +174,7 @@ namespace esphome
         enum class NonNasaCommand : uint8_t
         {
             Cmd20 = 0x20,
+            Cmd23 = 0x23,
             Cmd54 = 0x54,
             Cmd8D = 0x8d,
             CmdC0 = 0xc0,
@@ -191,6 +202,7 @@ namespace esphome
             union
             {
                 NonNasaCommand20 command20;
+                NonNasaCommand23 command23;
                 NonNasaCommandRaw command54; // Control message ack
                 NonNasaCommand8D command8D;
                 NonNasaCommandC0 commandC0;

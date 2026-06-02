@@ -301,6 +301,11 @@ namespace esphome
                 str += "command20:{" + command20.to_string() + "}";
                 break;
             }
+            case NonNasaCommand::Cmd23:
+            {
+                str += "command23:{" + command23.to_string() + "}";
+                break;
+            }
             case NonNasaCommand::CmdC0:
             {
                 str += "commandC0:{" + commandC0.to_string() + "}";
@@ -434,6 +439,12 @@ namespace esphome
 
             case NonNasaCommand::CmdC1:
                 commandC1.outdoor_unit_sump_temp = Temperature::decode(data[8]);
+                return {DecodeResultType::Processed, 14};
+
+            case NonNasaCommand::Cmd23:
+                // Preset/mode status from indoor unit.
+                // data[7] bit0: 1=quiet ON, 0=quiet OFF
+                command23.quiet_mode = (data[7] & 0x01) != 0;
                 return {DecodeResultType::Processed, 14};
 
             case NonNasaCommand::CmdC6:
@@ -936,8 +947,8 @@ namespace esphome
                     // TODO
                     target->set_water_heater_mode(nonpacket_.src, nonnasa_water_heater_mode_to_mode(-0));
                     target->set_fanmode(nonpacket_.src, nonnasa_fanspeed_to_fanmode(nonpacket_.command20.fanspeed));
-                    // AltMode 2 = quiet, 0 = normal (matches PRESETS in __init__.py)
-                    target->set_altmode(nonpacket_.src, nonpacket_.command20.quiet_mode ? 2 : 0);
+                    // quiet mode is published from cmd:23, not from cmd:20
+                    // (cmd:20 data[10] does not carry quiet state on this hardware)
                     // Cmd20 swing decode: converting wind_direction to vertical/horizontal booleans
                     target->set_swing_horizontal(nonpacket_.src,
                                                  (nonpacket_.command20.wind_direction == NonNasaWindDirection::Horizontal) ||
@@ -947,6 +958,13 @@ namespace esphome
                                                    (nonpacket_.command20.wind_direction == NonNasaWindDirection::FourWay));
                     target->set_blade_position(nonpacket_.src, nonpacket_.command20.blade_position);
                 }
+            }
+            else if (nonpacket_.cmd == NonNasaCommand::Cmd23)
+            {
+                // Cmd23 is sent by the indoor unit when its preset/mode changes.
+                // data[7] bit0 encodes quiet mode: 1=quiet ON, 0=quiet OFF.
+                // AltMode value 2 = quiet, 0 = normal (matches PRESETS in __init__.py).
+                target->set_altmode(nonpacket_.src, nonpacket_.command23.quiet_mode ? 2 : 0);
             }
             else if (nonpacket_.cmd == NonNasaCommand::CmdC0)
             {
