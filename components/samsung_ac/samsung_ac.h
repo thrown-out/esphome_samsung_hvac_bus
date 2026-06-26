@@ -433,6 +433,7 @@ namespace esphome
       // settings from yaml
       GPIOPin *flow_control_pin_{nullptr};
       uint16_t tcp_mirror_port_{8899};
+      bool tcp_mirror_started_{false};
       TcpMirror tcp_mirror_;
       std::string debug_mqtt_host = "";
       uint16_t debug_mqtt_port = 1883;
