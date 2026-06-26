@@ -20,6 +20,7 @@ namespace esphome
         this->flow_control_pin_->digital_write(false); // ensure RX mode (LOW) from the start
       }
       startup_started_at_ms_ = millis();
+      tcp_mirror_.begin(tcp_mirror_port_);
       if (startup_delay_ms_ > 0)
       {
         LOGI("Startup delay: TX disabled for %d s, RX active.", startup_delay_ms_ / 1000);
@@ -135,6 +136,8 @@ namespace esphome
 
     void Samsung_AC::loop()
     {
+      tcp_mirror_.loop();
+
       if (data_processing_init)
         return;
 
@@ -186,6 +189,7 @@ namespace esphome
     bool Samsung_AC::read_data()
     {
       // read as long as there is anything to read
+      const size_t rx_before = data_.size();
       while (available())
       {
         uint8_t c;
@@ -194,6 +198,8 @@ namespace esphome
           data_.push_back(c);
         }
       }
+      if (data_.size() > rx_before)
+        tcp_mirror_.write_bytes(data_.data() + rx_before, data_.size() - rx_before);
 
       if (data_.empty())
         return true;
