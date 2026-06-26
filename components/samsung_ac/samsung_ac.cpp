@@ -20,7 +20,6 @@ namespace esphome
         this->flow_control_pin_->digital_write(false); // ensure RX mode (LOW) from the start
       }
       startup_started_at_ms_ = millis();
-      tcp_mirror_.begin(tcp_mirror_port_);
       if (startup_delay_ms_ > 0)
       {
         LOGI("Startup delay: TX disabled for %d s, RX active.", startup_delay_ms_ / 1000);
@@ -136,10 +135,15 @@ namespace esphome
 
     void Samsung_AC::loop()
     {
-      tcp_mirror_.loop();
-
-      if (data_processing_init)
-        return;
+        if (!tcp_mirror_started_) {
+            tcp_mirror_.begin(tcp_mirror_port_);
+            tcp_mirror_started_ = true;
+        }
+    
+        tcp_mirror_.loop();
+    
+        if (data_processing_init)
+            return;
 
       // Startup delay: evaluated on every loop() call, independent of bus activity.
       // Must be checked BEFORE read_data() — an active bus can keep read_data() returning
