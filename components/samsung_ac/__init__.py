@@ -542,6 +542,8 @@ CONF_NON_NASA_KEEPALIVE = "non_nasa_keepalive"
 
 CONF_DEBUG_LOG_UNDEFINED_MESSAGES = "debug_log_undefined_messages"
 
+CONF_TCP_MIRROR_PORT = "tcp_mirror_port"
+
 
 CONFIG_SCHEMA = (
     cv.Schema(
@@ -564,6 +566,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_DEBUG_LOG_UNDEFINED_MESSAGES, default=False): cv.boolean,
             cv.Optional(CONF_CAPABILITIES): CAPABILITIES_SCHEMA,
             cv.Optional(CONF_DEBUG_LOG_MESSAGES_ON_CHANGE, default=False): cv.boolean,
+            cv.Optional(CONF_TCP_MIRROR_PORT, default=8899): cv.port,
             cv.Required(CONF_DEVICES): cv.ensure_list(DEVICE_SCHEMA),
         }
     )
@@ -930,6 +933,7 @@ async def to_code(config):
         CONF_STARTUP_DELAY: var.set_startup_delay,
         CONF_DEBUG_LOG_UNDEFINED_MESSAGES: var.set_debug_log_undefined_messages,
         CONF_DEBUG_LOG_MESSAGES_ON_CHANGE: var.set_debug_log_messages_on_change,
+        CONF_TCP_MIRROR_PORT: var.set_tcp_mirror_port,
     }
 
     # Iterate over the actions
