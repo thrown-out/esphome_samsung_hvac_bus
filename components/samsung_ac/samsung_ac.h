@@ -10,6 +10,7 @@
 #include "protocol.h"
 #include "log.h"
 #include "device_state_tracker.h"
+#include "tcp_mirror.h"
 
 namespace esphome
 {
@@ -112,6 +113,8 @@ namespace esphome
       {
         non_nasa_tx_delay_ms = value;
       }
+
+      void set_tcp_mirror_port(uint16_t port) { tcp_mirror_port_ = port; }
 
       void set_debug_log_undefined_messages(bool value)
       {
@@ -429,6 +432,8 @@ namespace esphome
 
       // settings from yaml
       GPIOPin *flow_control_pin_{nullptr};
+      uint16_t tcp_mirror_port_{8899};
+      TcpMirror tcp_mirror_;
       std::string debug_mqtt_host = "";
       uint16_t debug_mqtt_port = 1883;
       std::string debug_mqtt_username = "";
